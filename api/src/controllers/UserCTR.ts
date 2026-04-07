@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { dBase } from "../data/Database.ts";
 import { signToken } from "../middleware/Auth.ts";
 import { RSchema, LSchema } from "../validation/Schema.ts";
-import type { RType, LType } from "../validation/Schema.ts";
+import type { RType } from "../validation/Schema.ts";
 import type { IReg } from "../models/Interfaces.ts";
 
 class UserClass {
@@ -122,7 +122,54 @@ class UserClass {
                 .status(res.statusCode)
                 .json({
                     success: false,
-                    message: "Error Loggin in the User!",
+                    message: "Error Logging in the User!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
+
+    Logout: express.Handler = async (req, res, next) => {
+        try {
+            res.cookie("token", "", {
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                maxAge: 1
+            });
+            res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The User has Logged Out!"
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error Logging out the User!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
+
+    Me: express.Handler = async (req, res, next) => {
+        try {
+            res.json({
+                success: true,
+                message: "User Info!",
+                data: req.user
+            });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error finding User Info!",
                     error: error instanceof Error ?
                         error.message : "Unknown Error!"
                 });

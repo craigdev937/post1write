@@ -1,12 +1,6 @@
-import express from "express";
-
 export interface JwtPayload {
     id: number,
     email: string
-};
-
-export interface AUTH extends express.Request {
-    user?: JwtPayload
 };
 
 export interface IReg {
