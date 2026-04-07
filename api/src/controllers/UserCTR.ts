@@ -2,8 +2,8 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import { dBase } from "../data/Database.ts";
 import { signToken } from "../middleware/Auth.ts";
-import { RSchema } from "../validation/Schema.ts";
-import type { RType } from "../validation/Schema.ts";
+import { RSchema, LSchema } from "../validation/Schema.ts";
+import type { RType, LType } from "../validation/Schema.ts";
 import type { IReg } from "../models/Interfaces.ts";
 
 class UserClass {
@@ -69,6 +69,60 @@ class UserClass {
                 .json({
                     success: false,
                     message: "Error fetching all the Users.",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
+
+    Login: express.Handler = async (req, res, next) => {
+        try {
+            const L = LSchema.parse(req.body);
+            const QRY = "SELECT * FROM users WHERE email=$1";
+            const user = await dBase.query<IReg>(QRY, [L.email]);
+            if (user.rows.length === 0) {
+                return res
+                    .status(400)
+                    .json({msg: "Invalid Credentials!"});
+            };
+
+            const uData = user.rows[0];
+            const isMatch = await bcrypt.compare(
+                L.password, uData.password);
+            if (!isMatch) {
+                return res
+                    .status(400)
+                    .json({msg: "Invalid Credentials!"});
+            };
+
+            const logToken = signToken(uData.id);
+            res.cookie("token", logToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                maxAge: 1000 * 60 * 60 * 24 * 30  //  30-Days.
+            });            
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The User has Logged In!",
+                    data: {
+                        id: uData.id,
+                        username: uData.username,
+                        email: uData.email,
+                        createdAt: uData.created_at,
+                        updatedAt: uData.updated_at
+                    },
+                    token: logToken
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error Loggin in the User!",
                     error: error instanceof Error ?
                         error.message : "Unknown Error!"
                 });

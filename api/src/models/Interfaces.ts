@@ -18,5 +18,11 @@ export interface IReg {
     updated_at?: string
 };
 
+export interface ILog {
+    id: number,
+    email: string,
+    password: string
+};
+
 
 
