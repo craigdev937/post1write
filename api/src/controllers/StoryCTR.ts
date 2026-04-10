@@ -1,0 +1,65 @@
+import express from "express";
+import { dBase } from "../data/Database.ts";
+import { SSchema } from "../validation/Schema.ts";
+import type { IStory } from "../models/Interfaces.ts";
+import type { SType } from "../validation/Schema.ts";
+
+class StoryClass {
+    Create: express.Handler = async (req, res, next) => {
+        try {
+            const S = SSchema.parse(req.body);
+            const QRY = `INSERT INTO story 
+            (author_id, title, text) 
+            VALUES ($1, $2, $3) RETURNING*`;
+            const values = [S.author_id, S.title, S.text];
+            const newStory = await dBase.query<SType>(QRY, values);
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The Story was Created!",
+                    data: newStory.rows[0]
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error Creating the Story!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
+
+    FetchAll: express.Handler = async (req, res, next) => {
+        try {
+            const QRY = "SELECT * FROM story ORDER BY id ASC";
+            const stories = await dBase.query<IStory[]>(QRY);
+            return res
+                .status(res.statusCode)
+                .json({
+                    success: true,
+                    message: "All Stories!",
+                    count: stories.rows.length,
+                    data: stories.rows
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error fetching all Stories!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
+};
+
+export const STORY: StoryClass = new StoryClass();
+
+
+

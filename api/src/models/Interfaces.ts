@@ -18,5 +18,16 @@ export interface ILog {
     password: string
 };
 
+export interface IStory {
+    id: number,
+    author_id: number,
+    title: string,
+    text: string,
+    poster?: string,
+    views?: number,
+    created_at?: string,
+    updated_at?: string
+};
+
 
 

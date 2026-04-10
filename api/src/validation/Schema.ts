@@ -25,5 +25,17 @@ export const LSchema = z.object({
 
 export type LType = z.infer<typeof LSchema>;
 
+export const SSchema = z.object({
+    author_id: z.number(),
+    title: z.string()
+        .min(1, "Title is Required!")
+        .max(255, "Title is MAX 255 characters"),
+    text: z.string()
+        .min(1, "Text is Required!")
+        .max(50_000, "Text is too long")
+});
+
+export type SType = z.infer<typeof SSchema>;
+
 
 
