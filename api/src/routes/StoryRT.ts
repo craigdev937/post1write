@@ -3,6 +3,7 @@ import { STORY } from "../controllers/StoryCTR.ts";
 import { PRO } from "../middleware/Auth.ts";
 import { VAL } from "../middleware/Val.ts";
 import { SSchema } from "../validation/Schema.ts";
+import { UP } from "../middleware/Upload.ts";
 
 // ROUTES  http://localhost:9000/api/story
 export const storyRt: express.Router = express.Router();
@@ -11,5 +12,7 @@ export const storyRt: express.Router = express.Router();
     storyRt.get("/story/:id", STORY.GetOne);
     storyRt.put("/story/:id", PRO, VAL(SSchema), STORY.Update);
     storyRt.delete("/story/:id", PRO, STORY.Delete);
+    
+    storyRt.post("/posters", PRO, UP.single("story-poster"), STORY.Poster);
 
 

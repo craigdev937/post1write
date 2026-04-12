@@ -139,6 +139,28 @@ class StoryClass {
             next(error);
         }
     };
+
+    Poster: express.Handler = async (req, res, next) => {
+        try {
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The Poster was Uploaded!",
+                    URL: `/api/posters/${req.file?.filename}`
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error uploading a Poster!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
 };
 
 export const STORY: StoryClass = new StoryClass();

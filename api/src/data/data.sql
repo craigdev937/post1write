@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS story (
     title VARCHAR(255) NOT NULL UNIQUE,
     text TEXT NOT NULL,
     poster VARCHAR(255),
-    views INTEGER,
+    views INTEGER GENERATED ALWAYS AS IDENTITY,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW(),
 
