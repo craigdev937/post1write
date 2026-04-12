@@ -57,6 +57,32 @@ class StoryClass {
             next(error);
         }
     };
+
+    GetOne: express.Handler = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const QRY = "SELECT * FROM story WHERE id=$1";
+            const values = [id];
+            const story = await dBase.query<IStory>(QRY, values);
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "One Story!",
+                    data: story.rows[0]
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error getting one Story!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
 };
 
 export const STORY: StoryClass = new StoryClass();
