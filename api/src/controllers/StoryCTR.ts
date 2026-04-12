@@ -83,6 +83,36 @@ class StoryClass {
             next(error);
         }
     };
+
+    Update: express.Handler = async (req, res, next) => {
+        try {
+            const S = SSchema.parse(req.body);
+            const { id } = req.params;
+            const QRY = `UPDATE story 
+            SET author_id = $1, title = $2, text = $3, 
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id=$4 RETURNING *`;
+            const values = [S.author_id, S.title, S.text, id];
+            const story = await dBase.query<IStory>(QRY, values);
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The Story was Updated!",
+                    data: story.rows[0]
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error Updating a Story!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
 };
 
 export const STORY: StoryClass = new StoryClass();

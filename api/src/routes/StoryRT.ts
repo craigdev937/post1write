@@ -9,6 +9,7 @@ export const storyRt: express.Router = express.Router();
     storyRt.post("/story", PRO, VAL(SSchema), STORY.Create);
     storyRt.get("/story", STORY.FetchAll);
     storyRt.get("/story/:id", STORY.GetOne);
+    storyRt.put("/story/:id", PRO, VAL(SSchema), STORY.Update);
 
 
 
