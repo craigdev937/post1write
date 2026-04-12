@@ -10,6 +10,6 @@ export const storyRt: express.Router = express.Router();
     storyRt.get("/story", STORY.FetchAll);
     storyRt.get("/story/:id", STORY.GetOne);
     storyRt.put("/story/:id", PRO, VAL(SSchema), STORY.Update);
-
+    storyRt.delete("/story/:id", PRO, STORY.Delete);
 
 

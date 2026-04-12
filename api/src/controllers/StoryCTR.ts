@@ -113,6 +113,32 @@ class StoryClass {
             next(error);
         }
     };
+
+    Delete: express.Handler = async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const QRY = "DELETE FROM story WHERE id=$1";
+            const values = [id];
+            const delStory = await dBase.query<IStory>(QRY, values);
+            return res
+                .status(201)
+                .json({
+                    success: true,
+                    message: "The Story was Deleted!",
+                    data: delStory.rows[0]
+                });
+        } catch (error) {
+            res
+                .status(res.statusCode)
+                .json({
+                    success: false,
+                    message: "Error Deleting a Story!",
+                    error: error instanceof Error ?
+                        error.message : "Unknown Error!"
+                });
+            next(error);
+        }
+    };
 };
 
 export const STORY: StoryClass = new StoryClass();
