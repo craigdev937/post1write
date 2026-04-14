@@ -1,5 +1,20 @@
+:root {
+    --white: white;
+    --pink: #ffcbdd;
+    --blue: cornflowerblue;
+    --taupe: #98878f;
+    --dark: #28252c;
+    --black: #140b0e;
+}
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background: cornflowerblue;
+    background: var(--taupe);
     font-family: "Segoe UI";
 }
 
