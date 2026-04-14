@@ -2,11 +2,14 @@ import React from "react";
 import "./Home.css";
 import HeroImg from "@public/home.png"
 import { Link } from "react-router";
+import { UserAPI } from "../../global/UserAPI";
+import { Spinner } from "../../components/spin/Spinner";
 
 export const Home = () => {
     return (
         <React.Fragment>
             <main className="home">
+                <Spinner />
                 {/* HERO SECTION */}
                 <section className="home__hero">
                     <div className="home__hero-img">

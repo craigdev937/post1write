@@ -1,0 +1,30 @@
+export interface IData {
+    success: boolean,
+    message: string,
+    count: number,
+    data: [{
+        id: number,
+        username: string,
+        email: string,
+        password: string,
+        created_at?: string,
+        updated_at?: string
+    }]
+};
+
+export interface IUser {
+    id: number,
+    username: string,
+    email: string,
+    password: string,
+    created_at?: string,
+    updated_at?: string
+};
+
+export interface ILogin {
+    email: string,
+    password: string,
+    token: string
+};
+
+
